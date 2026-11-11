@@ -56,7 +56,7 @@ Par catégorie : 7 IAM, 2 EXP, 1 CHIF, 2 TRAC, 6 AUT (dont 2 secrets).
   la politique est construite avec `jsonencode(...)`. Seul Checkov la voit.
   D'où l'intérêt de la règle Conftest n° 1, qui travaille sur le **plan** où le
   JSON est déjà évalué.
-- **Checkov ne signale pas `access_key = "test"`** : CKV_AWS_41 réussit parce que
+- **Checkov ne signale pas les identifiants `test`/`test` écrits dans le provider** : CKV_AWS_41 réussit parce que
   la valeur ne ressemble pas à une vraie clé.
 - **gitleaks, avec ses règles par défaut, ne détecte aucun des trois secrets.**
   Il a fallu étendre sa configuration (`.gitleaks.toml`) et ajouter une

@@ -1,0 +1,488 @@
+diff --git a/terraform/main.tf b/terraform/main.tf
+index 55f9ad4..ade53e8 100644
+--- a/terraform/main.tf
++++ b/terraform/main.tf
+@@ -1,51 +1,98 @@
+ # ---------------------------------------------------------------------------
+-# VERSION NAÏVE — volontairement non sécurisée (Partie 1 du TP).
+-#   - aucun chiffrement, aucun blocage de l'accès public, pas de versioning
+-#   - politique IAM avec Action = "*" et Resource = "*"
+-#   - un mot de passe écrit en dur dans le code
+-#   - aucune étiquette
++# VERSION SÉCURISÉE (branche `secure`).
++# Les deux buckets sont décrits par le module réutilisable modules/secure-bucket
++# (bonus). Les blocs `moved` (moves.tf) garantissent que le passage au module
++# ne détruit/recrée AUCUN bucket.
+ # ---------------------------------------------------------------------------
+ 
+ locals {
+-  app_db_password = <valeur retirée : voir audit/secrets_historique.txt>
++  # Étiquettes obligatoires appliquées à CHAQUE ressource étiquetable.
++  common_tags = {
++    owner   = var.owner
++    env     = var.environment
++    project = var.project_name
++  }
++
++  logs_bucket_name          = "${var.project_name}-logs"
++  customer_data_bucket_name = "${var.project_name}-customer-data"
+ }
+ 
+-resource "aws_s3_bucket" "logs" {
+-  bucket = "${var.project_name}-logs"
++data "aws_caller_identity" "current" {}
++
++# --- Buckets -----------------------------------------------------------------
++module "logs_bucket" {
++  source = "./modules/secure-bucket"
++
++  bucket_name        = local.logs_bucket_name
++  tags               = merge(local.common_tags, { data_class = "logs" })
++  is_log_destination = true
++  source_account_id  = data.aws_caller_identity.current.account_id
++
++  expiration_days         = 365 # rétention des journaux : 1 an
++  noncurrent_version_days = 30
+ }
+ 
+-resource "aws_s3_bucket" "customer_data" {
+-  bucket = "${var.project_name}-customer-data"
++module "customer_data_bucket" {
++  source = "./modules/secure-bucket"
++
++  bucket_name              = local.customer_data_bucket_name
++  tags                     = merge(local.common_tags, { data_class = "confidential" })
++  access_log_target_bucket = module.logs_bucket.bucket_name
++  access_log_prefix        = "s3-access/customer-data/"
++
++  noncurrent_version_days = 90
+ }
+ 
++# --- IAM : moindre privilège ---------------------------------------------------
+ resource "aws_iam_user" "app_writer" {
++  #checkov:skip=CKV_AWS_273:L'énoncé impose un utilisateur IAM app-writer ; en production : rôle IAM assumé (OIDC/IRSA). Exception EXC-05.
+   name = "app-writer"
++  tags = local.common_tags
++}
++
++# La politique est portée par un GROUPE (CKV_AWS_40 / AWS-0143) et n'autorise
++# QUE l'écriture d'objets sous le préfixe app/ du bucket de journaux.
++# L'ARN est construit (connu au plan) pour que Conftest puisse le vérifier.
++#trivy:ignore:AWS-0123 EXC-06 : compte de service sans console ; la MFA s'applique aux humains, pas aux clés d'application.
++resource "aws_iam_group" "app_writers" {
++  name = "app-writers"
+ }
+ 
+-resource "aws_iam_user_policy" "app_writer" {
+-  name = "app-writer-policy"
+-  user = aws_iam_user.app_writer.name
++resource "aws_iam_group_policy" "app_writers_logs_write" {
++  name  = "app-writers-logs-write"
++  group = aws_iam_group.app_writers.name
+ 
+   policy = jsonencode({
+     Version = "2012-10-17"
+     Statement = [
+       {
+-        Effect   = "Allow"
+-        Action   = "*"
+-        Resource = "*"
++        Sid    = "WriteAppLogsOnly"
++        Effect = "Allow"
++        Action = [
++          "s3:PutObject",
++          "s3:AbortMultipartUpload",
++        ]
++        Resource = "${module.logs_bucket.bucket_arn}/app/*"
+       }
+     ]
+   })
+ }
+ 
+-# Configuration de l'application déposée dans le bucket de données
++resource "aws_iam_user_group_membership" "app_writer" {
++  user   = aws_iam_user.app_writer.name
++  groups = [aws_iam_group.app_writers.name]
++}
++
++# --- Configuration applicative (secret fourni hors dépôt) ---------------------
+ resource "aws_s3_object" "app_config" {
+-  bucket       = aws_s3_bucket.customer_data.id
+-  key          = "config/app.json"
+-  content_type = "application/json"
++  bucket                 = module.customer_data_bucket.bucket_name
++  key                    = "config/app.json"
++  content_type           = "application/json"
++  server_side_encryption = "AES256"
+   content = jsonencode({
+     db_host     = "db.novacorp.internal"
+     db_user     = "app"
+-    db_password = local.app_db_password
++    db_password = var.db_password # variable sensitive, valeur hors dépôt
+   })
++  tags = local.common_tags
+ }
+diff --git a/terraform/modules/secure-bucket/main.tf b/terraform/modules/secure-bucket/main.tf
+new file mode 100644
+index 0000000..4086b2c
+--- /dev/null
++++ b/terraform/modules/secure-bucket/main.tf
+@@ -0,0 +1,127 @@
++# ---------------------------------------------------------------------------
++# Module « bucket sécurisé » (bonus du TP).
++# Garanties : 4 verrous d'accès public, chiffrement par défaut, versioning,
++# TLS obligatoire, cycle de vie, journaux d'accès (sauf bucket de journaux).
++#
++# Les attributs dépendants référencent "aws_s3_bucket.this.bucket" (connu dès
++# le plan) et non ".id" (inconnu avant apply) : Conftest peut ainsi relier
++# chaque sous-ressource à son bucket dans le plan JSON.
++# ---------------------------------------------------------------------------
++
++locals {
++  bucket_arn = "arn:aws:s3:::${aws_s3_bucket.this.bucket}"
++}
++
++# EXCEPTIONS DOCUMENTÉES (détail : audit/exceptions.md)
++#trivy:ignore:AWS-0132 EXC-01 : KMS indisponible dans LocalStack, SSE-S3 AES256 appliqué.
++#trivy:ignore:AWS-0089[bucket=novacorp-logs] EXC-04 : pas de journalisation récursive du bucket de journaux.
++resource "aws_s3_bucket" "this" {
++  #checkov:skip=CKV_AWS_145:KMS non disponible dans l'environnement LocalStack imposé (s3,iam,sts) ; chiffrement SSE-S3 AES256 appliqué. Exception EXC-01.
++  #checkov:skip=CKV_AWS_144:Laboratoire mono-région LocalStack ; la réplication inter-région exige une 2e région + rôle IAM. Exception EXC-02.
++  #checkov:skip=CKV2_AWS_62:Aucun service de notification (SNS/SQS/Lambda/EventBridge) dans l'environnement. Exception EXC-03.
++  #checkov:skip=CKV_AWS_18:Les journaux d'accès sont imposés par validation pour tout bucket sauf le bucket de destination des journaux (pas de journalisation récursive). Exception EXC-04.
++  bucket = var.bucket_name
++  tags   = var.tags
++
++  lifecycle {
++    precondition {
++      condition     = var.is_log_destination || var.access_log_target_bucket != null
++      error_message = "Un bucket qui n'est pas le bucket de journaux doit définir access_log_target_bucket."
++    }
++  }
++}
++
++resource "aws_s3_bucket_public_access_block" "this" {
++  bucket                  = aws_s3_bucket.this.bucket
++  block_public_acls       = true
++  block_public_policy     = true
++  ignore_public_acls      = true
++  restrict_public_buckets = true
++}
++
++resource "aws_s3_bucket_ownership_controls" "this" {
++  bucket = aws_s3_bucket.this.bucket
++  rule {
++    object_ownership = "BucketOwnerEnforced" # désactive les ACL
++  }
++}
++
++#trivy:ignore:AWS-0132 EXC-01 : KMS indisponible dans LocalStack, SSE-S3 AES256 appliqué.
++resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
++  bucket = aws_s3_bucket.this.bucket
++  rule {
++    apply_server_side_encryption_by_default {
++      sse_algorithm = "AES256"
++    }
++  }
++}
++
++resource "aws_s3_bucket_versioning" "this" {
++  bucket = aws_s3_bucket.this.bucket
++  versioning_configuration {
++    status = "Enabled"
++  }
++}
++
++resource "aws_s3_bucket_logging" "this" {
++  count         = var.access_log_target_bucket == null ? 0 : 1
++  bucket        = aws_s3_bucket.this.bucket
++  target_bucket = var.access_log_target_bucket
++  target_prefix = var.access_log_prefix
++}
++
++resource "aws_s3_bucket_policy" "this" {
++  bucket = aws_s3_bucket.this.bucket
++  policy = jsonencode({
++    Version = "2012-10-17"
++    Statement = concat(
++      [
++        {
++          Sid       = "DenyInsecureTransport"
++          Effect    = "Deny"
++          Principal = "*"
++          Action    = "s3:*"
++          Resource  = [local.bucket_arn, "${local.bucket_arn}/*"]
++          Condition = { Bool = { "aws:SecureTransport" = "false" } }
++        }
++      ],
++      var.is_log_destination ? [
++        {
++          Sid       = "AllowS3ServerAccessLogs"
++          Effect    = "Allow"
++          Principal = { Service = "logging.s3.amazonaws.com" }
++          Action    = "s3:PutObject"
++          Resource  = "${local.bucket_arn}/s3-access/*"
++          Condition = { StringEquals = { "aws:SourceAccount" = var.source_account_id } }
++        }
++      ] : []
++    )
++  })
++  depends_on = [aws_s3_bucket_public_access_block.this]
++}
++
++resource "aws_s3_bucket_lifecycle_configuration" "this" {
++  bucket = aws_s3_bucket.this.bucket
++
++  rule {
++    id     = "retention"
++    status = "Enabled"
++    filter {}
++
++    dynamic "expiration" {
++      for_each = var.expiration_days == null ? [] : [var.expiration_days]
++      content {
++        days = expiration.value
++      }
++    }
++
++    noncurrent_version_expiration {
++      noncurrent_days = var.noncurrent_version_days
++    }
++
++    abort_incomplete_multipart_upload {
++      days_after_initiation = 7
++    }
++  }
++  depends_on = [aws_s3_bucket_versioning.this]
++}
+diff --git a/terraform/modules/secure-bucket/outputs.tf b/terraform/modules/secure-bucket/outputs.tf
+new file mode 100644
+index 0000000..0f2e52e
+--- /dev/null
++++ b/terraform/modules/secure-bucket/outputs.tf
+@@ -0,0 +1,9 @@
++output "bucket_name" {
++  description = "Nom du bucket."
++  value       = aws_s3_bucket.this.bucket
++}
++
++output "bucket_arn" {
++  description = "ARN du bucket (construit, connu dès le plan)."
++  value       = local.bucket_arn
++}
+diff --git a/terraform/modules/secure-bucket/variables.tf b/terraform/modules/secure-bucket/variables.tf
+new file mode 100644
+index 0000000..4777e49
+--- /dev/null
++++ b/terraform/modules/secure-bucket/variables.tf
+@@ -0,0 +1,50 @@
++variable "bucket_name" {
++  description = "Nom du bucket S3."
++  type        = string
++}
++
++variable "tags" {
++  description = "Étiquettes appliquées au bucket. Doivent contenir owner et env."
++  type        = map(string)
++
++  validation {
++    condition     = alltrue([for k in ["owner", "env"] : length(trimspace(lookup(var.tags, k, ""))) > 0])
++    error_message = "Les étiquettes owner et env sont obligatoires et non vides."
++  }
++}
++
++variable "is_log_destination" {
++  description = "true pour le bucket qui RÉCEPTIONNE les journaux d'accès S3 (il ne journalise pas vers lui-même, et autorise le service de journalisation S3 à y écrire)."
++  type        = bool
++  default     = false
++}
++
++variable "access_log_target_bucket" {
++  description = "Bucket de destination des journaux d'accès. Obligatoire sauf pour le bucket de journaux lui-même."
++  type        = string
++  default     = null
++}
++
++variable "access_log_prefix" {
++  description = "Préfixe des journaux d'accès dans le bucket de destination."
++  type        = string
++  default     = "s3-access/"
++}
++
++variable "source_account_id" {
++  description = "Compte autorisé à livrer des journaux d'accès (si is_log_destination)."
++  type        = string
++  default     = null
++}
++
++variable "expiration_days" {
++  description = "Expiration des objets courants (null = jamais)."
++  type        = number
++  default     = null
++}
++
++variable "noncurrent_version_days" {
++  description = "Expiration des versions non courantes."
++  type        = number
++  default     = 90
++}
+diff --git a/terraform/modules/secure-bucket/versions.tf b/terraform/modules/secure-bucket/versions.tf
+new file mode 100644
+index 0000000..bf72ee6
+--- /dev/null
++++ b/terraform/modules/secure-bucket/versions.tf
+@@ -0,0 +1,10 @@
++terraform {
++  required_version = ">= 1.6.0"
++
++  required_providers {
++    aws = {
++      source  = "hashicorp/aws"
++      version = "~> 6.0"
++    }
++  }
++}
+diff --git a/terraform/moves.tf b/terraform/moves.tf
+new file mode 100644
+index 0000000..a9ef63d
+--- /dev/null
++++ b/terraform/moves.tf
+@@ -0,0 +1,58 @@
++# Refactorisation vers le module secure-bucket SANS destruction :
++# chaque adresse existante dans le state est déplacée vers sa nouvelle adresse.
++
++# --- novacorp-logs ---
++moved {
++  from = aws_s3_bucket.logs
++  to   = module.logs_bucket.aws_s3_bucket.this
++}
++moved {
++  from = aws_s3_bucket_public_access_block.logs
++  to   = module.logs_bucket.aws_s3_bucket_public_access_block.this
++}
++moved {
++  from = aws_s3_bucket_server_side_encryption_configuration.logs
++  to   = module.logs_bucket.aws_s3_bucket_server_side_encryption_configuration.this
++}
++moved {
++  from = aws_s3_bucket_versioning.logs
++  to   = module.logs_bucket.aws_s3_bucket_versioning.this
++}
++moved {
++  from = aws_s3_bucket_policy.logs
++  to   = module.logs_bucket.aws_s3_bucket_policy.this
++}
++moved {
++  from = aws_s3_bucket_lifecycle_configuration.logs
++  to   = module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this
++}
++
++# --- novacorp-customer-data ---
++moved {
++  from = aws_s3_bucket.customer_data
++  to   = module.customer_data_bucket.aws_s3_bucket.this
++}
++moved {
++  from = aws_s3_bucket_public_access_block.customer_data
++  to   = module.customer_data_bucket.aws_s3_bucket_public_access_block.this
++}
++moved {
++  from = aws_s3_bucket_server_side_encryption_configuration.customer_data
++  to   = module.customer_data_bucket.aws_s3_bucket_server_side_encryption_configuration.this
++}
++moved {
++  from = aws_s3_bucket_versioning.customer_data
++  to   = module.customer_data_bucket.aws_s3_bucket_versioning.this
++}
++moved {
++  from = aws_s3_bucket_policy.customer_data
++  to   = module.customer_data_bucket.aws_s3_bucket_policy.this
++}
++moved {
++  from = aws_s3_bucket_lifecycle_configuration.customer_data
++  to   = module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this
++}
++moved {
++  from = aws_s3_bucket_logging.customer_data
++  to   = module.customer_data_bucket.aws_s3_bucket_logging.this[0]
++}
+diff --git a/terraform/outputs.tf b/terraform/outputs.tf
+index f8ffe3d..f85dcf1 100644
+--- a/terraform/outputs.tf
++++ b/terraform/outputs.tf
+@@ -1,11 +1,11 @@
+ output "logs_bucket_name" {
+   description = "Nom du bucket de journaux."
+-  value       = aws_s3_bucket.logs.bucket
++  value       = module.logs_bucket.bucket_name
+ }
+ 
+ output "customer_data_bucket_name" {
+   description = "Nom du bucket de données clients."
+-  value       = aws_s3_bucket.customer_data.bucket
++  value       = module.customer_data_bucket.bucket_name
+ }
+ 
+ output "app_writer_user_name" {
+@@ -17,3 +17,13 @@ output "app_writer_user_arn" {
+   description = "ARN de l'utilisateur IAM applicatif."
+   value       = aws_iam_user.app_writer.arn
+ }
++
++output "app_writer_group_name" {
++  description = "Groupe IAM portant la politique de moindre privilège."
++  value       = aws_iam_group.app_writers.name
++}
++
++output "app_config_object" {
++  description = "Emplacement de la configuration applicative (le contenu reste sensible)."
++  value       = "s3://${module.customer_data_bucket.bucket_name}/${aws_s3_object.app_config.key}"
++}
+diff --git a/terraform/providers.tf b/terraform/providers.tf
+index b3d4503..d6e30ce 100644
+--- a/terraform/providers.tf
++++ b/terraform/providers.tf
+@@ -1,9 +1,9 @@
+ provider "aws" {
+   region = var.aws_region
+ 
+-  # VERSION NAÏVE : identifiants écrits en dur dans le code.
+-  access_key = <valeur factice retirée>
+-  secret_key = <valeur factice retirée>
++  # Aucun identifiant dans le code : ils sont lus dans l'environnement
++  # (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY = valeurs factices test/test,
++  # exportées par scripts/tools.sh).
+ 
+   # LocalStack : pas de vrai compte AWS
+   skip_credentials_validation = true
+diff --git a/terraform/variables.tf b/terraform/variables.tf
+index a2e1764..94c4343 100644
+--- a/terraform/variables.tf
++++ b/terraform/variables.tf
+@@ -31,3 +31,26 @@ variable "localstack_endpoint" {
+   type        = string
+   default     = "http://localhost:4566"
+ }
++
++variable "db_password" {
++  description = "Mot de passe applicatif de la base. Fourni HORS dépôt (TF_VAR_db_password, via le fichier .env non versionné)."
++  type        = string
++  sensitive   = true
++  # Pas de valeur par défaut : Terraform échoue si la valeur n'est pas fournie.
++
++  validation {
++    condition     = length(var.db_password) >= 16
++    error_message = "db_password doit contenir au moins 16 caractères."
++  }
++}
++
++variable "owner" {
++  description = "Équipe propriétaire des ressources (étiquette obligatoire owner)."
++  type        = string
++  default     = "team-platform"
++
++  validation {
++    condition     = length(trimspace(var.owner)) > 0
++    error_message = "owner ne peut pas être vide."
++  }
++}

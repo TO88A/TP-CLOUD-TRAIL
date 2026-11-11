@@ -16,3 +16,21 @@ $ git add -f terraform/terraform.tfstate && git commit -m "test: state"
 terraform/terraform.tfstate
 [pre-commit] ÉCHEC : fichier(s) sensible(s) indexé(s) ci-dessus : retirez-les (git rm --cached).
 (code de sortie: 1)
+
+## Cas 3 : commit légitime (sorties CI + hook)
+$ git commit -m "Partie 5 (sorties) + bonus pre-commit"
+[pre-commit] 1/4 fichiers interdits
+[pre-commit] 2/4 secrets dans les fichiers indexés (gitleaks)
+8:18PM INF 0 commits scanned.
+8:18PM INF scanned ~11107 bytes (11.11 KB) in 403ms
+8:18PM INF no leaks found
+[pre-commit] 3-4/4 aucun fichier .tf indexé : fmt/Checkov ignorés
+[pre-commit] OK
+[secure 3ccdcd6] Partie 5 (sorties) + bonus pre-commit
+ 6 files changed, 235 insertions(+)
+ create mode 100644 .pre-commit-config.yaml
+ create mode 100644 ci/sortie_naive.txt
+ create mode 100644 ci/sortie_secure.txt
+ create mode 100644 preuves/bonus_pre_commit.txt
+ create mode 100644 scripts/install-hooks.sh
+ create mode 100644 scripts/pre-commit.sh
