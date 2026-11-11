@@ -31,5 +31,7 @@ keywords    = ["akia", "asia", "abia", "acca"]
 [allowlist]
 description = "Valeurs non secrètes"
 # Références à des variables / valeurs factices documentées
-regexes = ['''var\.[a-z0-9_]+''', '''CHANGE_ME''', '''REDACTED''']
+regexes = ['''var\.[a-z0-9_]+''', '''CHANGE_ME''', '''REDACTED''',
+           # clé d'EXEMPLE de la documentation AWS, renvoyée par LocalStack
+           '''AKIAIOSFODNN7EXAMPLE''']
 paths   = ['''\.terraform/''', '''\.tfcache/''', '''\.trivycache/''']

@@ -34,6 +34,12 @@ export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-eu-west-3}"
 TP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export TP_ROOT
 
+# Secrets fournis HORS dépôt : fichier .env local (ignoré par Git)
+if [ -f "$TP_ROOT/.env" ]; then
+  set -a; # shellcheck disable=SC1091
+  . "$TP_ROOT/.env"; set +a
+fi
+
 # Git Bash (Windows) : désactive la conversion automatique des chemins
 # et obtient un chemin "C:/..." compréhensible par Docker Desktop.
 export MSYS_NO_PATHCONV=1
