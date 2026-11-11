@@ -1,0 +1,173 @@
+aws_iam_group.app_writers: Refreshing state... [id=app-writers]
+data.aws_caller_identity.current: Reading...
+aws_iam_user.app_writer: Refreshing state... [id=app-writer]
+module.logs_bucket.aws_s3_bucket.this: Refreshing state... [id=novacorp-logs]
+data.aws_caller_identity.current: Read complete after 0s [id=000000000000]
+aws_iam_user_group_membership.app_writer: Refreshing state... [id=terraform-X1yzyuYrJQXO3EBTbxnaGjiuKH]
+module.logs_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=novacorp-logs]
+module.logs_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=novacorp-logs]
+module.logs_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=novacorp-logs]
+aws_iam_group_policy.app_writers_logs_write: Refreshing state... [id=app-writers:app-writers-logs-write]
+module.customer_data_bucket.aws_s3_bucket.this: Refreshing state... [id=novacorp-customer-data]
+module.logs_bucket.aws_s3_bucket_policy.this: Refreshing state... [id=novacorp-logs]
+module.customer_data_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=novacorp-customer-data]
+module.customer_data_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=novacorp-customer-data]
+module.customer_data_bucket.aws_s3_bucket_logging.this[0]: Refreshing state... [id=novacorp-customer-data]
+module.customer_data_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=novacorp-customer-data]
+aws_s3_object.app_config: Refreshing state... [id=novacorp-customer-data/config/app.json]
+module.customer_data_bucket.aws_s3_bucket_policy.this: Refreshing state... [id=novacorp-customer-data]
+module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=novacorp-logs]
+module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=novacorp-customer-data]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # aws_s3_bucket.customer_data has moved to module.customer_data_bucket.aws_s3_bucket.this
+    resource "aws_s3_bucket" "this" {
+        id                          = "novacorp-customer-data"
+        tags                        = {
+            "data_class" = "confidential"
+            "env"        = "dev"
+            "owner"      = "team-platform"
+            "project"    = "novacorp"
+        }
+        # (15 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this will be updated in-place
+  # (moved from aws_s3_bucket_lifecycle_configuration.customer_data)
+  ~ resource "aws_s3_bucket_lifecycle_configuration" "this" {
+        id                                     = "novacorp-customer-data"
+        # (4 unchanged attributes hidden)
+
+      ~ rule {
+          ~ id     = "customer-data-versions" -> "retention"
+            # (2 unchanged attributes hidden)
+
+            # (3 unchanged blocks hidden)
+        }
+    }
+
+  # aws_s3_bucket_logging.customer_data has moved to module.customer_data_bucket.aws_s3_bucket_logging.this[0]
+    resource "aws_s3_bucket_logging" "this" {
+        id                    = "novacorp-customer-data"
+        # (5 unchanged attributes hidden)
+    }
+
+  # module.customer_data_bucket.aws_s3_bucket_ownership_controls.this will be created
+  + resource "aws_s3_bucket_ownership_controls" "this" {
+      + bucket = "novacorp-customer-data"
+      + id     = (known after apply)
+      + region = "eu-west-3"
+
+      + rule {
+          + object_ownership = "BucketOwnerEnforced"
+        }
+    }
+
+  # aws_s3_bucket_policy.customer_data has moved to module.customer_data_bucket.aws_s3_bucket_policy.this
+    resource "aws_s3_bucket_policy" "this" {
+        id     = "novacorp-customer-data"
+        # (3 unchanged attributes hidden)
+    }
+
+  # aws_s3_bucket_public_access_block.customer_data has moved to module.customer_data_bucket.aws_s3_bucket_public_access_block.this
+    resource "aws_s3_bucket_public_access_block" "this" {
+        id                      = "novacorp-customer-data"
+        # (6 unchanged attributes hidden)
+    }
+
+  # aws_s3_bucket_server_side_encryption_configuration.customer_data has moved to module.customer_data_bucket.aws_s3_bucket_server_side_encryption_configuration.this
+    resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+        id                    = "novacorp-customer-data"
+        # (3 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # aws_s3_bucket_versioning.customer_data has moved to module.customer_data_bucket.aws_s3_bucket_versioning.this
+    resource "aws_s3_bucket_versioning" "this" {
+        id                    = "novacorp-customer-data"
+        # (3 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # aws_s3_bucket.logs has moved to module.logs_bucket.aws_s3_bucket.this
+    resource "aws_s3_bucket" "this" {
+        id                          = "novacorp-logs"
+        tags                        = {
+            "data_class" = "logs"
+            "env"        = "dev"
+            "owner"      = "team-platform"
+            "project"    = "novacorp"
+        }
+        # (15 unchanged attributes hidden)
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this will be updated in-place
+  # (moved from aws_s3_bucket_lifecycle_configuration.logs)
+  ~ resource "aws_s3_bucket_lifecycle_configuration" "this" {
+        id                                     = "novacorp-logs"
+        # (4 unchanged attributes hidden)
+
+      ~ rule {
+          ~ id     = "logs-retention" -> "retention"
+            # (2 unchanged attributes hidden)
+
+            # (4 unchanged blocks hidden)
+        }
+    }
+
+  # module.logs_bucket.aws_s3_bucket_ownership_controls.this will be created
+  + resource "aws_s3_bucket_ownership_controls" "this" {
+      + bucket = "novacorp-logs"
+      + id     = (known after apply)
+      + region = "eu-west-3"
+
+      + rule {
+          + object_ownership = "BucketOwnerEnforced"
+        }
+    }
+
+  # aws_s3_bucket_policy.logs has moved to module.logs_bucket.aws_s3_bucket_policy.this
+    resource "aws_s3_bucket_policy" "this" {
+        id     = "novacorp-logs"
+        # (3 unchanged attributes hidden)
+    }
+
+  # aws_s3_bucket_public_access_block.logs has moved to module.logs_bucket.aws_s3_bucket_public_access_block.this
+    resource "aws_s3_bucket_public_access_block" "this" {
+        id                      = "novacorp-logs"
+        # (6 unchanged attributes hidden)
+    }
+
+  # aws_s3_bucket_server_side_encryption_configuration.logs has moved to module.logs_bucket.aws_s3_bucket_server_side_encryption_configuration.this
+    resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+        id                    = "novacorp-logs"
+        # (3 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # aws_s3_bucket_versioning.logs has moved to module.logs_bucket.aws_s3_bucket_versioning.this
+    resource "aws_s3_bucket_versioning" "this" {
+        id                    = "novacorp-logs"
+        # (3 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+Plan: 2 to add, 2 to change, 0 to destroy.
+
+Changes to Outputs:
+  + app_config_object         = "s3://novacorp-customer-data/config/app.json"
+  + app_writer_group_name     = "app-writers"

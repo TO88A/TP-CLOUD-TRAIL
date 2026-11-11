@@ -1,0 +1,29 @@
+module.customer_data_bucket.aws_s3_bucket_ownership_controls.this: Creating...
+module.logs_bucket.aws_s3_bucket_ownership_controls.this: Creating...
+module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Modifying... [id=novacorp-customer-data]
+module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Modifying... [id=novacorp-logs]
+module.logs_bucket.aws_s3_bucket_ownership_controls.this: Creation complete after 0s [id=novacorp-logs]
+module.customer_data_bucket.aws_s3_bucket_ownership_controls.this: Creation complete after 0s [id=novacorp-customer-data]
+module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-customer-data, 00m10s elapsed]
+module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-logs, 00m10s elapsed]
+module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-logs, 00m20s elapsed]
+module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-customer-data, 00m20s elapsed]
+module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-customer-data, 00m30s elapsed]
+module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-logs, 00m30s elapsed]
+module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-customer-data, 00m40s elapsed]
+module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-logs, 00m40s elapsed]
+module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-customer-data, 00m50s elapsed]
+module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Still modifying... [id=novacorp-logs, 00m50s elapsed]
+module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Modifications complete after 56s [id=novacorp-customer-data]
+module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Modifications complete after 56s [id=novacorp-logs]
+
+Apply complete! Resources: 2 added, 2 changed, 0 destroyed.
+
+Outputs:
+
+app_config_object = "s3://novacorp-customer-data/config/app.json"
+app_writer_group_name = "app-writers"
+app_writer_user_arn = "arn:aws:iam::000000000000:user/app-writer"
+app_writer_user_name = "app-writer"
+customer_data_bucket_name = "novacorp-customer-data"
+logs_bucket_name = "novacorp-logs"

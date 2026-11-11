@@ -1,0 +1,194 @@
+# Preuves AWS CLI — version sécurisée (LocalStack) — 2026-11-11T19:53:31Z
+
+$ aws --endpoint-url http://localhost:4566 s3api get-public-access-block --bucket novacorp-logs
+{
+    "PublicAccessBlockConfiguration": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": true
+    }
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-bucket-encryption --bucket novacorp-logs
+{
+    "ServerSideEncryptionConfiguration": {
+        "Rules": [
+            {
+                "ApplyServerSideEncryptionByDefault": {
+                    "SSEAlgorithm": "AES256"
+                },
+                "BucketKeyEnabled": false
+            }
+        ]
+    }
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-bucket-versioning --bucket novacorp-logs
+{
+    "Status": "Enabled"
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-bucket-tagging --bucket novacorp-logs
+{
+    "TagSet": [
+        {
+            "Key": "project",
+            "Value": "novacorp"
+        },
+        {
+            "Key": "env",
+            "Value": "dev"
+        },
+        {
+            "Key": "data_class",
+            "Value": "logs"
+        },
+        {
+            "Key": "owner",
+            "Value": "team-platform"
+        }
+    ]
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-bucket-ownership-controls --bucket novacorp-logs
+{
+    "OwnershipControls": {
+        "Rules": [
+            {
+                "ObjectOwnership": "BucketOwnerEnforced"
+            }
+        ]
+    }
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-public-access-block --bucket novacorp-customer-data
+{
+    "PublicAccessBlockConfiguration": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": true
+    }
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-bucket-encryption --bucket novacorp-customer-data
+{
+    "ServerSideEncryptionConfiguration": {
+        "Rules": [
+            {
+                "ApplyServerSideEncryptionByDefault": {
+                    "SSEAlgorithm": "AES256"
+                },
+                "BucketKeyEnabled": false
+            }
+        ]
+    }
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-bucket-versioning --bucket novacorp-customer-data
+{
+    "Status": "Enabled"
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-bucket-tagging --bucket novacorp-customer-data
+{
+    "TagSet": [
+        {
+            "Key": "env",
+            "Value": "dev"
+        },
+        {
+            "Key": "owner",
+            "Value": "team-platform"
+        },
+        {
+            "Key": "project",
+            "Value": "novacorp"
+        },
+        {
+            "Key": "data_class",
+            "Value": "confidential"
+        }
+    ]
+}
+
+$ aws --endpoint-url http://localhost:4566 s3api get-bucket-ownership-controls --bucket novacorp-customer-data
+{
+    "OwnershipControls": {
+        "Rules": [
+            {
+                "ObjectOwnership": "BucketOwnerEnforced"
+            }
+        ]
+    }
+}
+
+$ aws ... s3api get-bucket-logging --bucket novacorp-customer-data
+{
+    "LoggingEnabled": {
+        "TargetBucket": "novacorp-logs",
+        "TargetPrefix": "s3-access/customer-data/"
+    }
+}
+
+$ aws ... s3 ls
+2026-11-11 19:32:17 novacorp-customer-data
+2026-11-11 19:32:17 novacorp-logs
+
+$ aws ... iam list-users
+{
+    "Users": [
+        {
+            "Path": "/",
+            "UserName": "app-writer",
+            "UserId": "c95mpnuom0wisdooczd5",
+            "Arn": "arn:aws:iam::000000000000:user/app-writer",
+            "CreateDate": "2026-11-11T19:32:17.242353+00:00"
+        }
+    ]
+}
+
+$ aws ... iam list-user-policies --user-name app-writer   (doit être vide)
+{
+    "PolicyNames": []
+}
+
+$ aws ... iam list-groups-for-user --user-name app-writer
+[
+    "app-writers"
+]
+
+$ aws ... iam get-group-policy --group-name app-writers --policy-name app-writers-logs-write
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "s3:PutObject",
+                "s3:AbortMultipartUpload"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:s3:::novacorp-logs/app/*",
+            "Sid": "WriteAppLogsOnly"
+        }
+    ]
+}
+
+$ aws ... iam list-user-tags --user-name app-writer
+{
+    "Tags": [
+        {
+            "Key": "project",
+            "Value": "novacorp"
+        },
+        {
+            "Key": "env",
+            "Value": "dev"
+        },
+        {
+            "Key": "owner",
+            "Value": "team-platform"
+        }
+    ]
+}
