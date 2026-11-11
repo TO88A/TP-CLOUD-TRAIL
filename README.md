@@ -1,3 +1,4 @@
+## Réalisé par : Ilyass Aichouche - Meryem Chakir
 # NovaCorp IaC — TP 3.3 Terraform et sécurisation de l'IaC
 
 Infrastructure de NovaCorp décrite en Terraform : deux buckets S3
