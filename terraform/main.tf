@@ -87,3 +87,20 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "logs" {
     }
   }
 }
+
+# --- Versioning ---------------------------------------------------------------
+resource "aws_s3_bucket_versioning" "customer_data" {
+  bucket = aws_s3_bucket.customer_data.bucket
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "logs" {
+  bucket = aws_s3_bucket.logs.bucket
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}

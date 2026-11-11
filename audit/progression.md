@@ -8,3 +8,4 @@ Mesures relevées par `scripts/step_check.sh` après chaque commit (Checkov 3.3.
 | 1 | secrets hors du code (variable `sensitive`, `.env` hors dépôt, identifiants provider via l'environnement) | 25 | 17 | **0** |
 | 2 | blocage de l'accès public (4 verrous) sur les 2 buckets | 23 | 7 | 0 |
 | 3 | chiffrement par défaut AES256 (2 buckets + objet) | 23 | 7 | 0 |
+| 4 | versioning des 2 buckets | 21 | 5 | 0 |
