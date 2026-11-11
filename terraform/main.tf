@@ -134,3 +134,93 @@ resource "aws_s3_bucket_versioning" "logs" {
     status = "Enabled"
   }
 }
+
+# --- Traçabilité : journaux d'accès S3 du bucket de données -> novacorp-logs --
+resource "aws_s3_bucket_logging" "customer_data" {
+  bucket        = aws_s3_bucket.customer_data.bucket
+  target_bucket = aws_s3_bucket.logs.bucket
+  target_prefix = "s3-access/customer-data/"
+}
+
+data "aws_caller_identity" "current" {}
+
+# --- Politiques de bucket : TLS obligatoire + dépôt des journaux d'accès ------
+resource "aws_s3_bucket_policy" "logs" {
+  bucket = aws_s3_bucket.logs.bucket
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "DenyInsecureTransport"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource  = ["arn:aws:s3:::${aws_s3_bucket.logs.bucket}", "arn:aws:s3:::${aws_s3_bucket.logs.bucket}/*"]
+        Condition = { Bool = { "aws:SecureTransport" = "false" } }
+      },
+      {
+        Sid       = "AllowS3ServerAccessLogs"
+        Effect    = "Allow"
+        Principal = { Service = "logging.s3.amazonaws.com" }
+        Action    = "s3:PutObject"
+        Resource  = "arn:aws:s3:::${aws_s3_bucket.logs.bucket}/s3-access/*"
+        Condition = { StringEquals = { "aws:SourceAccount" = data.aws_caller_identity.current.account_id } }
+      }
+    ]
+  })
+  depends_on = [aws_s3_bucket_public_access_block.logs]
+}
+
+resource "aws_s3_bucket_policy" "customer_data" {
+  bucket = aws_s3_bucket.customer_data.bucket
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "DenyInsecureTransport"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource  = ["arn:aws:s3:::${aws_s3_bucket.customer_data.bucket}", "arn:aws:s3:::${aws_s3_bucket.customer_data.bucket}/*"]
+        Condition = { Bool = { "aws:SecureTransport" = "false" } }
+      }
+    ]
+  })
+  depends_on = [aws_s3_bucket_public_access_block.customer_data]
+}
+
+# --- Cycle de vie -------------------------------------------------------------
+resource "aws_s3_bucket_lifecycle_configuration" "logs" {
+  bucket = aws_s3_bucket.logs.bucket
+
+  rule {
+    id     = "logs-retention"
+    status = "Enabled"
+    filter {}
+    expiration {
+      days = 365
+    }
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "customer_data" {
+  bucket = aws_s3_bucket.customer_data.bucket
+
+  rule {
+    id     = "customer-data-versions"
+    status = "Enabled"
+    filter {}
+    noncurrent_version_expiration {
+      noncurrent_days = 90
+    }
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}
