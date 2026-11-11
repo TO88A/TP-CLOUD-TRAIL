@@ -17,20 +17,37 @@ resource "aws_iam_user" "app_writer" {
   name = "app-writer"
 }
 
-resource "aws_iam_user_policy" "app_writer" {
-  name = "app-writer-policy"
-  user = aws_iam_user.app_writer.name
+# Moindre privilège : la politique est portée par un GROUPE (CKV_AWS_40 /
+# AWS-0143) et n'autorise QUE l'écriture d'objets sous le préfixe app/ du
+# bucket de journaux. L'ARN est construit à partir de ".bucket" (connu au
+# plan) pour que Conftest puisse vérifier la politique avant apply.
+resource "aws_iam_group" "app_writers" {
+  name = "app-writers"
+}
+
+resource "aws_iam_group_policy" "app_writers_logs_write" {
+  name  = "app-writers-logs-write"
+  group = aws_iam_group.app_writers.name
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = "*"
-        Resource = "*"
+        Sid    = "WriteAppLogsOnly"
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:AbortMultipartUpload",
+        ]
+        Resource = "arn:aws:s3:::${aws_s3_bucket.logs.bucket}/app/*"
       }
     ]
   })
+}
+
+resource "aws_iam_user_group_membership" "app_writer" {
+  user   = aws_iam_user.app_writer.name
+  groups = [aws_iam_group.app_writers.name]
 }
 
 # Configuration de l'application déposée dans le bucket de données

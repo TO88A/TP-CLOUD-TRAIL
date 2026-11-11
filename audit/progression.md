@@ -9,3 +9,4 @@ Mesures relevées par `scripts/step_check.sh` après chaque commit (Checkov 3.3.
 | 2 | blocage de l'accès public (4 verrous) sur les 2 buckets | 23 | 7 | 0 |
 | 3 | chiffrement par défaut AES256 (2 buckets + objet) | 23 | 7 | 0 |
 | 4 | versioning des 2 buckets | 21 | 5 | 0 |
+| 5 | IAM moindre privilège : groupe `app-writers`, `s3:PutObject` + `s3:AbortMultipartUpload` sur `novacorp-logs/app/*` uniquement | 11 | 5 (dont nouveau AWS-0123) | 0 |
