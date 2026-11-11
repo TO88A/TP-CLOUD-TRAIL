@@ -35,9 +35,10 @@ resource "aws_iam_user_policy" "app_writer" {
 
 # Configuration de l'application déposée dans le bucket de données
 resource "aws_s3_object" "app_config" {
-  bucket       = aws_s3_bucket.customer_data.bucket
-  key          = "config/app.json"
-  content_type = "application/json"
+  bucket                 = aws_s3_bucket.customer_data.bucket
+  key                    = "config/app.json"
+  content_type           = "application/json"
+  server_side_encryption = "AES256"
   content = jsonencode({
     db_host     = "db.novacorp.internal"
     db_user     = "app"
@@ -62,4 +63,27 @@ resource "aws_s3_bucket_public_access_block" "customer_data" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+# --- Chiffrement par défaut (SSE-S3 / AES256) ---------------------------------
+# KMS n'est pas activé dans LocalStack (SERVICES=s3,iam,sts) : on utilise le
+# chiffrement S3 géré (AES256). L'exigence de clé CMK est traitée en exception.
+resource "aws_s3_bucket_server_side_encryption_configuration" "customer_data" {
+  bucket = aws_s3_bucket.customer_data.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "logs" {
+  bucket = aws_s3_bucket.logs.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
 }
