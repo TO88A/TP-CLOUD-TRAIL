@@ -1,0 +1,3156 @@
+{
+    "check_type": "terraform",
+    "results": {
+        "passed_checks": [
+            {
+                "check_id": "CKV_AWS_93",
+                "bc_check_id": "BC_AWS_S3_24",
+                "check_name": "Ensure S3 bucket policy does not lockout all but root user. (Prevent lockouts needing root account fixes)",
+                "check_result": {
+                    "result": "PASSED",
+                    "evaluated_keys": [
+                        "policy"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.S3ProtectAgainstPolicyLockout",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-24",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_93",
+                "bc_check_id": "BC_AWS_S3_24",
+                "check_name": "Ensure S3 bucket policy does not lockout all but root user. (Prevent lockouts needing root account fixes)",
+                "check_result": {
+                    "result": "PASSED",
+                    "evaluated_keys": [
+                        "policy"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.S3ProtectAgainstPolicyLockout",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-24",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_41",
+                "bc_check_id": "BC_AWS_SECRETS_5",
+                "check_name": "Ensure no hard coded AWS access key and secret key exists in provider",
+                "check_result": {
+                    "result": "PASSED",
+                    "evaluated_keys": []
+                },
+                "code_block": [
+                    [
+                        1,
+                        "provider \"aws\" {\n"
+                    ],
+                    [
+                        2,
+                        "  region = var.aws_region\n"
+                    ],
+                    [
+                        3,
+                        "\n"
+                    ],
+                    [
+                        4,
+                        "  # VERSION NA\u00cfVE : identifiants \u00e9crits en dur dans le code.\n"
+                    ],
+                    [
+                        5,
+                        "  access_key = \"test\"\n"
+                    ],
+                    [
+                        6,
+                        "  secret_key = \"test\"\n"
+                    ],
+                    [
+                        7,
+                        "\n"
+                    ],
+                    [
+                        8,
+                        "  # LocalStack : pas de vrai compte AWS\n"
+                    ],
+                    [
+                        9,
+                        "  skip_credentials_validation = true\n"
+                    ],
+                    [
+                        10,
+                        "  skip_requesting_account_id  = true\n"
+                    ],
+                    [
+                        11,
+                        "  skip_metadata_api_check     = true\n"
+                    ],
+                    [
+                        12,
+                        "  s3_use_path_style           = true\n"
+                    ],
+                    [
+                        13,
+                        "\n"
+                    ],
+                    [
+                        14,
+                        "  endpoints {\n"
+                    ],
+                    [
+                        15,
+                        "    s3  = var.localstack_endpoint\n"
+                    ],
+                    [
+                        16,
+                        "    iam = var.localstack_endpoint\n"
+                    ],
+                    [
+                        17,
+                        "    sts = var.localstack_endpoint\n"
+                    ],
+                    [
+                        18,
+                        "  }\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/providers.tf",
+                "file_abs_path": "/work/terraform/providers.tf",
+                "repo_file_path": "/terraform/providers.tf",
+                "file_line_range": [
+                    1,
+                    19
+                ],
+                "resource": "aws.default",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.provider.aws.credentials",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/secrets-policies/bc-aws-secrets-5",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/providers.tf",
+                "breadcrumbs": {
+                    "region": [
+                        {
+                            "type": "variable",
+                            "name": "aws_region",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        }
+                    ],
+                    "endpoints.iam": [
+                        {
+                            "type": "variable",
+                            "name": "localstack_endpoint",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        }
+                    ],
+                    "endpoints.s3": [
+                        {
+                            "type": "variable",
+                            "name": "localstack_endpoint",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        }
+                    ],
+                    "endpoints.sts": [
+                        {
+                            "type": "variable",
+                            "name": "localstack_endpoint",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_57",
+                "bc_check_id": "BC_AWS_S3_2",
+                "check_name": "S3 Bucket has an ACL defined which allows public WRITE access.",
+                "check_result": {
+                    "result": "PASSED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "acl",
+                        "access_control_policy/grant/*/grantee/uri",
+                        "access_control_policy/grant/*/permission",
+                        "access_control_policy/grant",
+                        "access_control_policy",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-2-acl-write-permissions-everyone",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_57",
+                "bc_check_id": "BC_AWS_S3_2",
+                "check_name": "S3 Bucket has an ACL defined which allows public WRITE access.",
+                "check_result": {
+                    "result": "PASSED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "acl",
+                        "access_control_policy/grant/*/grantee/uri",
+                        "access_control_policy/grant/*/permission",
+                        "access_control_policy/grant",
+                        "access_control_policy",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-2-acl-write-permissions-everyone",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV2_AWS_22",
+                "bc_check_id": "BC_AWS_IAM_67",
+                "check_name": "Ensure an IAM User does not have access to the console",
+                "check_result": {
+                    "result": "PASSED",
+                    "entity": {
+                        "aws_iam_user": {
+                            "app_writer": {
+                                "__end_line__": 23,
+                                "__start_line__": 21,
+                                "name": [
+                                    "app-writer"
+                                ],
+                                "__address__": "aws_iam_user.app_writer"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        21,
+                        "resource \"aws_iam_user\" \"app_writer\" {\n"
+                    ],
+                    [
+                        22,
+                        "  name = \"app-writer\"\n"
+                    ],
+                    [
+                        23,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    21,
+                    23
+                ],
+                "resource": "aws_iam_user.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/ensure-an-iam-user-does-not-have-access-to-the-console-group",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf"
+            },
+            {
+                "check_id": "CKV_AWS_20",
+                "bc_check_id": "BC_AWS_S3_1",
+                "check_name": "S3 Bucket has an ACL defined which allows public READ access.",
+                "check_result": {
+                    "result": "PASSED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "acl",
+                        "access_control_policy/grant/*/grantee/uri",
+                        "access_control_policy/grant",
+                        "access_control_policy",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-1-acl-read-permissions-everyone",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_20",
+                "bc_check_id": "BC_AWS_S3_1",
+                "check_name": "S3 Bucket has an ACL defined which allows public READ access.",
+                "check_result": {
+                    "result": "PASSED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "acl",
+                        "access_control_policy/grant/*/grantee/uri",
+                        "access_control_policy/grant",
+                        "access_control_policy",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-1-acl-read-permissions-everyone",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_19",
+                "bc_check_id": "BC_AWS_S3_14",
+                "check_name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+                "check_result": {
+                    "result": "PASSED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "server_side_encryption_configuration/rule/apply_server_side_encryption_by_default/sse_algorithm",
+                        "rule/apply_server_side_encryption_by_default/sse_algorithm",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-14-data-encrypted-at-rest",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_19",
+                "bc_check_id": "BC_AWS_S3_14",
+                "check_name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+                "check_result": {
+                    "result": "PASSED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "server_side_encryption_configuration/rule/apply_server_side_encryption_by_default/sse_algorithm",
+                        "rule/apply_server_side_encryption_by_default/sse_algorithm",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-14-data-encrypted-at-rest",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            }
+        ],
+        "failed_checks": [
+            {
+                "check_id": "CKV_AWS_273",
+                "bc_check_id": "BC_AWS_IAM_77",
+                "check_name": "Ensure access is controlled through SSO and not AWS IAM defined users",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": []
+                },
+                "code_block": [
+                    [
+                        21,
+                        "resource \"aws_iam_user\" \"app_writer\" {\n"
+                    ],
+                    [
+                        22,
+                        "  name = \"app-writer\"\n"
+                    ],
+                    [
+                        23,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    21,
+                    23
+                ],
+                "resource": "aws_iam_user.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMUserNotUsedForAccess",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-273",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf"
+            },
+            {
+                "check_id": "CKV_AWS_289",
+                "bc_check_id": "BC_AWS_IAM_84",
+                "check_name": "Ensure IAM policies does not allow permissions management / resource exposure without constraints",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "policy/Statement/[0]/Action"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMPermissionsManagement",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-289",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_288",
+                "bc_check_id": "BC_AWS_IAM_83",
+                "check_name": "Ensure IAM policies does not allow data exfiltration",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "policy/Statement/[0]/Action"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMDataExfiltration",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-288",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_355",
+                "bc_check_id": "BC_AWS_IAM_88",
+                "check_name": "Ensure no IAM policies documents allow \"*\" as a statement's resource for restrictable actions",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "policy/Statement/[0]/Action"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMStarResourcePolicyDocument",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-355",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_287",
+                "bc_check_id": "BC_AWS_IAM_82",
+                "check_name": "Ensure IAM policies does not allow credentials exposure",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "policy/Statement/[0]/Action"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMCredentialsExposure",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-287",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_62",
+                "bc_check_id": "BC_AWS_IAM_47",
+                "check_name": "Ensure IAM policies that allow full \"*-*\" administrative privileges are not created",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "policy",
+                        "inline_policy"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMAdminPolicyDocument",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-iam-45",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_290",
+                "bc_check_id": "BC_AWS_IAM_85",
+                "check_name": "Ensure IAM policies does not allow write access without constraints",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "policy/Statement/[0]/Action"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMWriteAccess",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-290",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_286",
+                "bc_check_id": "BC_AWS_IAM_81",
+                "check_name": "Ensure IAM policies does not allow privilege escalation",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "policy/Statement/[0]/Action"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMPrivilegeEscalation",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-286",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_63",
+                "bc_check_id": "BC_AWS_IAM_48",
+                "check_name": "Ensure no IAM policies documents allow \"*\" as a statement's actions",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "policy",
+                        "inline_policy"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMStarActionPolicyDocument",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/iam-48",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_40",
+                "bc_check_id": "BC_AWS_IAM_16",
+                "check_name": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)",
+                "check_result": {
+                    "result": "FAILED",
+                    "evaluated_keys": [
+                        "user"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.terraform.checks.resource.aws.IAMPolicyAttachedToGroupOrRoles",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/iam-16-iam-policy-privileges-1",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV2_AWS_6",
+                "bc_check_id": "BC_AWS_NETWORKING_52",
+                "check_name": "Ensure that S3 bucket has a Public Access block",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "block_public_policy",
+                        "resource_type",
+                        "block_public_acls"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/s3-bucket-should-have-public-access-blocks-defaults-to-false-if-the-public-access-block-is-not-attached",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV2_AWS_6",
+                "bc_check_id": "BC_AWS_NETWORKING_52",
+                "check_name": "Ensure that S3 bucket has a Public Access block",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "block_public_policy",
+                        "resource_type",
+                        "block_public_acls"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/s3-bucket-should-have-public-access-blocks-defaults-to-false-if-the-public-access-block-is-not-attached",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV2_AWS_62",
+                "bc_check_id": "BC_AWS_LOGGING_36",
+                "check_name": "Ensure S3 buckets should have event notifications enabled",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-62",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV2_AWS_62",
+                "bc_check_id": "BC_AWS_LOGGING_36",
+                "check_name": "Ensure S3 buckets should have event notifications enabled",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-62",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_18",
+                "bc_check_id": "BC_AWS_S3_13",
+                "check_name": "Ensure the S3 bucket has access logging enabled",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "logging",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-13-enable-logging",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_18",
+                "bc_check_id": "BC_AWS_S3_13",
+                "check_name": "Ensure the S3 bucket has access logging enabled",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "logging",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-13-enable-logging",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_144",
+                "bc_check_id": "BC_AWS_GENERAL_72",
+                "check_name": "Ensure that S3 bucket has cross-region replication enabled",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "rule/*/status",
+                        "replication_configuration/rules/*/status",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-bucket-has-cross-region-replication-enabled",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_144",
+                "bc_check_id": "BC_AWS_GENERAL_72",
+                "check_name": "Ensure that S3 bucket has cross-region replication enabled",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "rule/*/status",
+                        "replication_configuration/rules/*/status",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-bucket-has-cross-region-replication-enabled",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV2_AWS_61",
+                "bc_check_id": "BC_AWS_LOGGING_35",
+                "check_name": "Ensure that an S3 bucket has a lifecycle configuration",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "lifecycle_rule",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-61",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV2_AWS_61",
+                "bc_check_id": "BC_AWS_LOGGING_35",
+                "check_name": "Ensure that an S3 bucket has a lifecycle configuration",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "lifecycle_rule",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-61",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_21",
+                "bc_check_id": "BC_AWS_S3_16",
+                "check_name": "Ensure all data stored in the S3 bucket have versioning enabled",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "versioning_configuration/status",
+                        "resource_type",
+                        "versioning/enabled"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_21",
+                "bc_check_id": "BC_AWS_S3_16",
+                "check_name": "Ensure all data stored in the S3 bucket have versioning enabled",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "versioning_configuration/status",
+                        "resource_type",
+                        "versioning/enabled"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_145",
+                "bc_check_id": "BC_AWS_GENERAL_56",
+                "check_name": "Ensure that S3 buckets are encrypted with KMS by default",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "logs": {
+                                "__end_line__": 15,
+                                "__start_line__": 13,
+                                "bucket": [
+                                    "novacorp-logs"
+                                ],
+                                "__address__": "aws_s3_bucket.logs"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "server_side_encryption_configuration/rule/apply_server_side_encryption_by_default/sse_algorithm",
+                        "rule/apply_server_side_encryption_by_default/sse_algorithm",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        13,
+                        "resource \"aws_s3_bucket\" \"logs\" {\n"
+                    ],
+                    [
+                        14,
+                        "  bucket = \"${var.project_name}-logs\"\n"
+                    ],
+                    [
+                        15,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    13,
+                    15
+                ],
+                "resource": "aws_s3_bucket.logs",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-buckets-are-encrypted-with-kms-by-default",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.logs",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV_AWS_145",
+                "bc_check_id": "BC_AWS_GENERAL_56",
+                "check_name": "Ensure that S3 buckets are encrypted with KMS by default",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_s3_bucket": {
+                            "customer_data": {
+                                "__end_line__": 19,
+                                "__start_line__": 17,
+                                "bucket": [
+                                    "novacorp-customer-data"
+                                ],
+                                "__address__": "aws_s3_bucket.customer_data"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "server_side_encryption_configuration/rule/apply_server_side_encryption_by_default/sse_algorithm",
+                        "rule/apply_server_side_encryption_by_default/sse_algorithm",
+                        "resource_type"
+                    ]
+                },
+                "code_block": [
+                    [
+                        17,
+                        "resource \"aws_s3_bucket\" \"customer_data\" {\n"
+                    ],
+                    [
+                        18,
+                        "  bucket = \"${var.project_name}-customer-data\"\n"
+                    ],
+                    [
+                        19,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    17,
+                    19
+                ],
+                "resource": "aws_s3_bucket.customer_data",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-buckets-are-encrypted-with-kms-by-default",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "bucket": [
+                        {
+                            "type": "variable",
+                            "name": "project_name",
+                            "path": "/work/terraform/variables.tf",
+                            "module_connection": false
+                        },
+                        {
+                            "type": "resource",
+                            "name": "aws_s3_bucket.customer_data",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            },
+            {
+                "check_id": "CKV2_AWS_40",
+                "bc_check_id": "BC_AWS_IAM_73",
+                "check_name": "Ensure AWS IAM policy does not allow full IAM privileges",
+                "check_result": {
+                    "result": "FAILED",
+                    "entity": {
+                        "aws_iam_user_policy": {
+                            "app_writer": {
+                                "__end_line__": 39,
+                                "__start_line__": 25,
+                                "name": [
+                                    "app-writer-policy"
+                                ],
+                                "policy": [
+                                    {
+                                        "Version": "2012-10-17",
+                                        "Statement": [
+                                            {
+                                                "Effect": "Allow",
+                                                "Action": "*",
+                                                "Resource": "*"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "user": [
+                                    "app-writer"
+                                ],
+                                "__address__": "aws_iam_user_policy.app_writer"
+                            }
+                        }
+                    },
+                    "evaluated_keys": [
+                        "statement[?(@/effect == Allow)]/actions[*]",
+                        "policy/Statement[?(@/Effect == Allow)]/Action[*]",
+                        "inline_policy/Statement[?(@/Effect == Allow)]/Action[*]"
+                    ]
+                },
+                "code_block": [
+                    [
+                        25,
+                        "resource \"aws_iam_user_policy\" \"app_writer\" {\n"
+                    ],
+                    [
+                        26,
+                        "  name = \"app-writer-policy\"\n"
+                    ],
+                    [
+                        27,
+                        "  user = aws_iam_user.app_writer.name\n"
+                    ],
+                    [
+                        28,
+                        "\n"
+                    ],
+                    [
+                        29,
+                        "  policy = jsonencode({\n"
+                    ],
+                    [
+                        30,
+                        "    Version = \"2012-10-17\"\n"
+                    ],
+                    [
+                        31,
+                        "    Statement = [\n"
+                    ],
+                    [
+                        32,
+                        "      {\n"
+                    ],
+                    [
+                        33,
+                        "        Effect   = \"Allow\"\n"
+                    ],
+                    [
+                        34,
+                        "        Action   = \"*\"\n"
+                    ],
+                    [
+                        35,
+                        "        Resource = \"*\"\n"
+                    ],
+                    [
+                        36,
+                        "      }\n"
+                    ],
+                    [
+                        37,
+                        "    ]\n"
+                    ],
+                    [
+                        38,
+                        "  })\n"
+                    ],
+                    [
+                        39,
+                        "}\n"
+                    ]
+                ],
+                "file_path": "/main.tf",
+                "file_abs_path": "/work/terraform/main.tf",
+                "repo_file_path": "/terraform/main.tf",
+                "file_line_range": [
+                    25,
+                    39
+                ],
+                "resource": "aws_iam_user_policy.app_writer",
+                "evaluations": null,
+                "check_class": "checkov.common.graph.checks_infra.base_check",
+                "fixed_definition": null,
+                "entity_tags": null,
+                "caller_file_path": null,
+                "caller_file_line_range": null,
+                "resource_address": null,
+                "severity": null,
+                "bc_category": null,
+                "benchmarks": null,
+                "description": null,
+                "short_description": null,
+                "vulnerability_details": null,
+                "connected_node": null,
+                "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-2-40",
+                "details": [],
+                "check_len": null,
+                "definition_context_file_path": "/work/terraform/main.tf",
+                "breadcrumbs": {
+                    "user": [
+                        {
+                            "type": "resource",
+                            "name": "aws_iam_user.app_writer",
+                            "path": "/work/terraform/main.tf",
+                            "module_connection": false
+                        }
+                    ]
+                }
+            }
+        ],
+        "skipped_checks": [],
+        "parsing_errors": []
+    },
+    "summary": {
+        "passed": 10,
+        "failed": 25,
+        "skipped": 0,
+        "parsing_errors": 0,
+        "resource_count": 5,
+        "checkov_version": "3.3.30"
+    },
+    "url": "Add an api key '--bc-api-key <api-key>' to see more detailed insights via https://bridgecrew.cloud"
+}

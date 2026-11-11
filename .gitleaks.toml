@@ -1,0 +1,35 @@
+# Configuration gitleaks du TP.
+# Constat : avec ses seules règles par défaut, gitleaks v8.30.1 ne détecte PAS
+# le mot de passe écrit en dur dans la version naïve (main.tf). On étend donc
+# les règles par défaut avec des motifs adaptés à Terraform.
+
+title = "novacorp-iac"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id          = "tf-hardcoded-password"
+description = "Mot de passe / secret littéral affecté dans du HCL"
+regex       = '''(?i)\b[a-z0-9_]*(password|passwd|pwd|secret|token)[a-z0-9_]*\s*=\s*"([^"$\s]{6,})"'''
+secretGroup = 2
+keywords    = ["password", "passwd", "pwd", "secret", "token"]
+
+[[rules]]
+id          = "tf-provider-static-credentials"
+description = "Identifiants statiques dans un bloc provider (access_key / secret_key)"
+regex       = '''(?i)\b(access_key|secret_key)\s*=\s*"([^"$]+)"'''
+secretGroup = 2
+keywords    = ["access_key", "secret_key"]
+
+[[rules]]
+id          = "aws-access-key-id"
+description = "Identifiant de clé d'accès AWS (AKIA/ASIA...)"
+regex       = '''\b((?:AKIA|ASIA|ABIA|ACCA)[A-Z0-9]{16})\b'''
+keywords    = ["akia", "asia", "abia", "acca"]
+
+[allowlist]
+description = "Valeurs non secrètes"
+# Références à des variables / valeurs factices documentées
+regexes = ['''var\.[a-z0-9_]+''', '''CHANGE_ME''', '''REDACTED''']
+paths   = ['''\.terraform/''', '''\.tfcache/''', '''\.trivycache/''']

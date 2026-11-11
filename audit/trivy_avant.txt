@@ -1,0 +1,287 @@
+
+Report Summary
+
+┌─────────┬────────────────────────┬───────────────────┐
+│ Target  │          Type          │ Misconfigurations │
+├─────────┼────────────────────────┼───────────────────┤
+│ .       │ terraformplan-snapshot │         0         │
+├─────────┼────────────────────────┼───────────────────┤
+│ main.tf │ terraformplan-snapshot │        17         │
+└─────────┴────────────────────────┴───────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+main.tf (terraformplan-snapshot)
+================================
+Tests: 17 (SUCCESSES: 0, FAILURES: 17)
+Failures: 17 (UNKNOWN: 0, LOW: 5, MEDIUM: 2, HIGH: 10, CRITICAL: 0)
+
+AWS-0086 (HIGH): No public access block so not blocking public acls
+════════════════════════════════════════
+S3 buckets should block public ACLs on buckets and any objects they contain. By blocking, PUTs with fail if the object has any public ACL a.
+
+
+See https://avd.aquasec.com/misconfig/aws-0086
+────────────────────────────────────────
+ main.tf:17-19
+────────────────────────────────────────
+  17 ┌ resource "aws_s3_bucket" "customer_data" {
+  18 │   bucket = "${var.project_name}-customer-data"
+  19 └ }
+────────────────────────────────────────
+
+
+AWS-0086 (HIGH): No public access block so not blocking public acls
+════════════════════════════════════════
+S3 buckets should block public ACLs on buckets and any objects they contain. By blocking, PUTs with fail if the object has any public ACL a.
+
+
+See https://avd.aquasec.com/misconfig/aws-0086
+────────────────────────────────────────
+ main.tf:13-15
+────────────────────────────────────────
+  13 ┌ resource "aws_s3_bucket" "logs" {
+  14 │   bucket = "${var.project_name}-logs"
+  15 └ }
+────────────────────────────────────────
+
+
+AWS-0087 (HIGH): No public access block so not blocking public policies
+════════════════════════════════════════
+S3 bucket policy should have block public policy to prevent users from putting a policy that enable public access.
+
+
+See https://avd.aquasec.com/misconfig/aws-0087
+────────────────────────────────────────
+ main.tf:17-19
+────────────────────────────────────────
+  17 ┌ resource "aws_s3_bucket" "customer_data" {
+  18 │   bucket = "${var.project_name}-customer-data"
+  19 └ }
+────────────────────────────────────────
+
+
+AWS-0087 (HIGH): No public access block so not blocking public policies
+════════════════════════════════════════
+S3 bucket policy should have block public policy to prevent users from putting a policy that enable public access.
+
+
+See https://avd.aquasec.com/misconfig/aws-0087
+────────────────────────────────────────
+ main.tf:13-15
+────────────────────────────────────────
+  13 ┌ resource "aws_s3_bucket" "logs" {
+  14 │   bucket = "${var.project_name}-logs"
+  15 └ }
+────────────────────────────────────────
+
+
+AWS-0089 (LOW): Bucket has logging disabled
+════════════════════════════════════════
+Ensures S3 bucket logging is enabled for S3 buckets
+
+See https://avd.aquasec.com/misconfig/aws-0089
+────────────────────────────────────────
+ main.tf:17-19
+────────────────────────────────────────
+  17 ┌ resource "aws_s3_bucket" "customer_data" {
+  18 │   bucket = "${var.project_name}-customer-data"
+  19 └ }
+────────────────────────────────────────
+
+
+AWS-0089 (LOW): Bucket has logging disabled
+════════════════════════════════════════
+Ensures S3 bucket logging is enabled for S3 buckets
+
+See https://avd.aquasec.com/misconfig/aws-0089
+────────────────────────────────────────
+ main.tf:13-15
+────────────────────────────────────────
+  13 ┌ resource "aws_s3_bucket" "logs" {
+  14 │   bucket = "${var.project_name}-logs"
+  15 └ }
+────────────────────────────────────────
+
+
+AWS-0090 (MEDIUM): Bucket does not have versioning enabled
+════════════════════════════════════════
+Versioning in Amazon S3 is a means of keeping multiple variants of an object in the same bucket.
+
+You can use the S3 Versioning feature to preserve, retrieve, and restore every version of every object stored in your buckets.
+
+With versioning you can recover more easily from both unintended user actions and application failures.
+
+When you enable versioning, also keep in mind the potential costs of storing noncurrent versions of objects. To help manage those costs, consider setting up an S3 Lifecycle configuration.
+
+
+See https://avd.aquasec.com/misconfig/aws-0090
+────────────────────────────────────────
+ main.tf:17-19
+────────────────────────────────────────
+  17 ┌ resource "aws_s3_bucket" "customer_data" {
+  18 │   bucket = "${var.project_name}-customer-data"
+  19 └ }
+────────────────────────────────────────
+
+
+AWS-0090 (MEDIUM): Bucket does not have versioning enabled
+════════════════════════════════════════
+Versioning in Amazon S3 is a means of keeping multiple variants of an object in the same bucket.
+
+You can use the S3 Versioning feature to preserve, retrieve, and restore every version of every object stored in your buckets.
+
+With versioning you can recover more easily from both unintended user actions and application failures.
+
+When you enable versioning, also keep in mind the potential costs of storing noncurrent versions of objects. To help manage those costs, consider setting up an S3 Lifecycle configuration.
+
+
+See https://avd.aquasec.com/misconfig/aws-0090
+────────────────────────────────────────
+ main.tf:13-15
+────────────────────────────────────────
+  13 ┌ resource "aws_s3_bucket" "logs" {
+  14 │   bucket = "${var.project_name}-logs"
+  15 └ }
+────────────────────────────────────────
+
+
+AWS-0091 (HIGH): No public access block so not blocking public acls
+════════════════════════════════════════
+S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.
+
+
+See https://avd.aquasec.com/misconfig/aws-0091
+────────────────────────────────────────
+ main.tf:17-19
+────────────────────────────────────────
+  17 ┌ resource "aws_s3_bucket" "customer_data" {
+  18 │   bucket = "${var.project_name}-customer-data"
+  19 └ }
+────────────────────────────────────────
+
+
+AWS-0091 (HIGH): No public access block so not blocking public acls
+════════════════════════════════════════
+S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.
+
+
+See https://avd.aquasec.com/misconfig/aws-0091
+────────────────────────────────────────
+ main.tf:13-15
+────────────────────────────────────────
+  13 ┌ resource "aws_s3_bucket" "logs" {
+  14 │   bucket = "${var.project_name}-logs"
+  15 └ }
+────────────────────────────────────────
+
+
+AWS-0093 (HIGH): No public access block so not restricting public buckets
+════════════════════════════════════════
+S3 buckets should restrict public policies for the bucket. By enabling, the restrict_public_buckets, only the bucket owner and AWS Services can access if it has a public policy.
+
+
+See https://avd.aquasec.com/misconfig/aws-0093
+────────────────────────────────────────
+ main.tf:17-19
+────────────────────────────────────────
+  17 ┌ resource "aws_s3_bucket" "customer_data" {
+  18 │   bucket = "${var.project_name}-customer-data"
+  19 └ }
+────────────────────────────────────────
+
+
+AWS-0093 (HIGH): No public access block so not restricting public buckets
+════════════════════════════════════════
+S3 buckets should restrict public policies for the bucket. By enabling, the restrict_public_buckets, only the bucket owner and AWS Services can access if it has a public policy.
+
+
+See https://avd.aquasec.com/misconfig/aws-0093
+────────────────────────────────────────
+ main.tf:13-15
+────────────────────────────────────────
+  13 ┌ resource "aws_s3_bucket" "logs" {
+  14 │   bucket = "${var.project_name}-logs"
+  15 └ }
+────────────────────────────────────────
+
+
+AWS-0094 (LOW): Bucket does not have a corresponding public access block.
+════════════════════════════════════════
+The "block public access" settings in S3 override individual policies that apply to a given bucket, meaning that all public access can be controlled in one central types for that bucket. It is therefore good practice to define these settings for each bucket in order to clearly define the public access that can be allowed for it.
+
+
+See https://avd.aquasec.com/misconfig/aws-0094
+────────────────────────────────────────
+ main.tf:17-19
+────────────────────────────────────────
+  17 ┌ resource "aws_s3_bucket" "customer_data" {
+  18 │   bucket = "${var.project_name}-customer-data"
+  19 └ }
+────────────────────────────────────────
+
+
+AWS-0094 (LOW): Bucket does not have a corresponding public access block.
+════════════════════════════════════════
+The "block public access" settings in S3 override individual policies that apply to a given bucket, meaning that all public access can be controlled in one central types for that bucket. It is therefore good practice to define these settings for each bucket in order to clearly define the public access that can be allowed for it.
+
+
+See https://avd.aquasec.com/misconfig/aws-0094
+────────────────────────────────────────
+ main.tf:13-15
+────────────────────────────────────────
+  13 ┌ resource "aws_s3_bucket" "logs" {
+  14 │   bucket = "${var.project_name}-logs"
+  15 └ }
+────────────────────────────────────────
+
+
+AWS-0132 (HIGH): Bucket does not encrypt data with a customer managed key.
+════════════════════════════════════════
+Encryption using AWS keys provides protection for your S3 buckets. To gain greater control over encryption, such as key rotation, access policies, and auditability, use customer managed keys (CMKs) with SSE-KMS.
+Note that SSE-KMS is not supported for S3 server access logging destination buckets; in such cases, use SSE-S3 instead.
+
+
+See https://avd.aquasec.com/misconfig/aws-0132
+────────────────────────────────────────
+ main.tf:17-19
+────────────────────────────────────────
+  17 ┌ resource "aws_s3_bucket" "customer_data" {
+  18 │   bucket = "${var.project_name}-customer-data"
+  19 └ }
+────────────────────────────────────────
+
+
+AWS-0132 (HIGH): Bucket does not encrypt data with a customer managed key.
+════════════════════════════════════════
+Encryption using AWS keys provides protection for your S3 buckets. To gain greater control over encryption, such as key rotation, access policies, and auditability, use customer managed keys (CMKs) with SSE-KMS.
+Note that SSE-KMS is not supported for S3 server access logging destination buckets; in such cases, use SSE-S3 instead.
+
+
+See https://avd.aquasec.com/misconfig/aws-0132
+────────────────────────────────────────
+ main.tf:13-15
+────────────────────────────────────────
+  13 ┌ resource "aws_s3_bucket" "logs" {
+  14 │   bucket = "${var.project_name}-logs"
+  15 └ }
+────────────────────────────────────────
+
+
+AWS-0143 (LOW): One or more policies are attached directly to a user
+════════════════════════════════════════
+CIS recommends that you apply IAM policies directly to groups and roles but not users. Assigning privileges at the group or role level reduces the complexity of access management as the number of users grow. Reducing access management complexity might in turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.
+
+
+See https://avd.aquasec.com/misconfig/aws-0143
+────────────────────────────────────────
+ main.tf:21-23
+────────────────────────────────────────
+  21 ┌ resource "aws_iam_user" "app_writer" {
+  22 │   name = "app-writer"
+  23 └ }
+────────────────────────────────────────
+
+

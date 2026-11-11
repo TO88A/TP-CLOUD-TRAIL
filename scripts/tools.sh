@@ -69,7 +69,7 @@ _drun() { # _drun <image> [docker args...] -- [cmd args...]
 }
 
 tf() {
-  if command -v terraform >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
+  if type -P terraform >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
     command terraform "$@"; return
   fi
   local envs=(-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION
@@ -81,14 +81,14 @@ tf() {
 }
 
 checkov() {
-  if command -v checkov >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
+  if type -P checkov >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
     command checkov "$@"; return
   fi
   _drun "$CHECKOV_IMAGE" --entrypoint checkov -- "$@"
 }
 
 trivy() {
-  if command -v trivy >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
+  if type -P trivy >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
     command trivy "$@"; return
   fi
   mkdir -p "$TP_ROOT/.trivycache"
@@ -96,14 +96,14 @@ trivy() {
 }
 
 conftest() {
-  if command -v conftest >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
+  if type -P conftest >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
     command conftest "$@"; return
   fi
   _drun "$CONFTEST_IMAGE" -- "$@"
 }
 
 gitleaks() {
-  if command -v gitleaks >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
+  if type -P gitleaks >/dev/null 2>&1 && [ -z "${FORCE_DOCKER:-}" ]; then
     command gitleaks "$@"; return
   fi
   _drun "$GITLEAKS_IMAGE" -- "$@"
