@@ -1,0 +1,52 @@
+$ git switch naive && ./ci/ci.sh ; echo $?
+==================================================================
+ Chaîne de contrôle IaC — NovaCorp
+ branche : naive (e29250a)   dossier : terraform
+ 2026-11-11 20:17:18 UTC
+==================================================================
+
+[1/8] Formatage (terraform fmt -check)
+  => OK
+
+[2/8] Validation (terraform validate)
+      Success! The configuration is valid.
+      
+  => OK
+
+[3/8] Détection de secrets (gitleaks + regex)
+        [gitleaks] analyse de 'terraform' (6 fichiers versionnables, config .gitleaks.toml)
+          Finding:     app_db_password = "REDACTED"
+          Secret:      REDACTED
+          RuleID:      tf-hardcoded-password
+          Entropy:     4.186704
+          File:        build/secret-scan/terraform/main.tf
+          Line:        10
+          Fingerprint: build/secret-scan/terraform/main.tf:tf-hardcoded-password:10
+          
+          Finding:     access_key = "REDACTED"
+          Secret:      REDACTED
+          RuleID:      tf-provider-static-credentials
+          Entropy:     1.500000
+          File:        build/secret-scan/terraform/providers.tf
+          Line:        5
+          Fingerprint: build/secret-scan/terraform/providers.tf:tf-provider-static-credentials:5
+          
+          Finding:     secret_key = "REDACTED"
+          Secret:      REDACTED
+          RuleID:      tf-provider-static-credentials
+          Entropy:     1.500000
+          File:        build/secret-scan/terraform/providers.tf
+          Line:        6
+          Fingerprint: build/secret-scan/terraform/providers.tf:tf-provider-static-credentials:6
+          
+          8:17PM INF scanned ~5227 bytes (5.23 KB) in 22.9ms
+          8:17PM WRN leaks found: 3
+        [regex] recherche de motifs (AKIA..., password =, access_key =)
+          TROUVÉ : terraform/main.tf:10:  app_db_password = "***"
+          TROUVÉ : terraform/providers.tf:5:  access_key = "***"
+          TROUVÉ : terraform/providers.tf:6:  secret_key = "***"
+  => ÉCHEC : Détection de secrets (gitleaks + regex) (code 1). Chaîne interrompue à l'étape 3/8.
+
+RÉSULTAT : ÉCHEC (27 s)
+$ echo $?
+1

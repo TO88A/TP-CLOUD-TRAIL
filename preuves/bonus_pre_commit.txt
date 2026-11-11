@@ -1,0 +1,18 @@
+# Démonstration du hook pre-commit — 2026-11-11T20:18:36Z
+
+## Cas 1 : secret ajouté dans un .tf
+$ git commit -m "test: secret"
+[pre-commit] 1/4 fichiers interdits
+[pre-commit] 2/4 secrets dans les fichiers indexés (gitleaks)
+8:18PM INF 0 commits scanned.
+8:18PM INF scanned ~47 bytes (47 bytes) in 150ms
+8:18PM WRN leaks found: 1
+[pre-commit] ÉCHEC : secret détecté dans les fichiers indexés.
+(code de sortie: 1)
+
+## Cas 2 : terraform.tfstate forcé dans l'index
+$ git add -f terraform/terraform.tfstate && git commit -m "test: state"
+[pre-commit] 1/4 fichiers interdits
+terraform/terraform.tfstate
+[pre-commit] ÉCHEC : fichier(s) sensible(s) indexé(s) ci-dessus : retirez-les (git rm --cached).
+(code de sortie: 1)

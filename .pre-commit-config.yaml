@@ -1,0 +1,22 @@
+# Bonus — configuration pour le framework pre-commit (https://pre-commit.com).
+#   pip install pre-commit && pre-commit install
+# Sans le framework : bash scripts/install-hooks.sh (même contrôles).
+# Les outils tournent dans des conteneurs Docker épinglés (scripts/tools.sh).
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: detect-private-key
+      - id: forbid-new-submodules
+
+  - repo: local
+    hooks:
+      - id: iac-checks
+        name: IaC NovaCorp (fichiers interdits, gitleaks, fmt, Checkov)
+        entry: bash scripts/pre-commit.sh
+        language: system
+        pass_filenames: false
+        always_run: true

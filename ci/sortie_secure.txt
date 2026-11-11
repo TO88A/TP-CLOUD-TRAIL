@@ -1,0 +1,89 @@
+$ git switch secure && ./ci/ci.sh ; echo $?
+==================================================================
+ Chaîne de contrôle IaC — NovaCorp
+ branche : secure (4614bf4)   dossier : terraform
+ 2026-11-11 20:15:23 UTC
+==================================================================
+
+[1/8] Formatage (terraform fmt -check)
+  => OK
+
+[2/8] Validation (terraform validate)
+      Success! The configuration is valid.
+      
+  => OK
+
+[3/8] Détection de secrets (gitleaks + regex)
+        [gitleaks] analyse de 'terraform' (11 fichiers versionnables, config .gitleaks.toml)
+          8:15PM INF scanned ~16608 bytes (16.61 KB) in 41.2ms
+          8:15PM INF no leaks found
+        [regex] recherche de motifs (AKIA..., password =, access_key =)
+  => OK
+
+[4/8] Analyse statique Checkov
+      terraform scan results:
+      
+      Passed checks: 41, Failed checks: 0, Skipped checks: 9
+      
+      
+  => OK
+
+[5/8] Analyse statique Trivy
+      
+      Report Summary
+      
+      ┌───────────────────────────────┬───────────┬───────────────────┐
+      │            Target             │   Type    │ Misconfigurations │
+      ├───────────────────────────────┼───────────┼───────────────────┤
+      │ .                             │ terraform │         0         │
+      ├───────────────────────────────┼───────────┼───────────────────┤
+      │ main.tf                       │ terraform │         0         │
+      ├───────────────────────────────┼───────────┼───────────────────┤
+      │ modules/secure-bucket/main.tf │ terraform │         0         │
+      └───────────────────────────────┴───────────┴───────────────────┘
+      Legend:
+      - '-': Not scanned
+      - '0': Clean (no security findings detected)
+      
+  => OK
+
+[6/8] Plan (terraform plan sur LocalStack)
+      data.aws_caller_identity.current: Reading...
+      aws_iam_user.app_writer: Refreshing state... [id=app-writer]
+      data.aws_caller_identity.current: Read complete after 0s [id=000000000000]
+      aws_iam_user_group_membership.app_writer: Refreshing state... [id=terraform-X1yzyuYrJQXO3EBTbxnaGjiuKH]
+      module.logs_bucket.aws_s3_bucket_ownership_controls.this: Refreshing state... [id=novacorp-logs]
+      module.logs_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=novacorp-logs]
+      module.logs_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=novacorp-logs]
+      aws_iam_group_policy.app_writers_logs_write: Refreshing state... [id=app-writers:app-writers-logs-write]
+      module.logs_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=novacorp-logs]
+      module.customer_data_bucket.aws_s3_bucket.this: Refreshing state... [id=novacorp-customer-data]
+      module.logs_bucket.aws_s3_bucket_policy.this: Refreshing state... [id=novacorp-logs]
+      module.customer_data_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=novacorp-customer-data]
+      module.customer_data_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=novacorp-customer-data]
+      module.customer_data_bucket.aws_s3_bucket_logging.this[0]: Refreshing state... [id=novacorp-customer-data]
+      module.customer_data_bucket.aws_s3_bucket_ownership_controls.this: Refreshing state... [id=novacorp-customer-data]
+      aws_s3_object.app_config: Refreshing state... [id=novacorp-customer-data/config/app.json]
+      module.customer_data_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=novacorp-customer-data]
+      module.customer_data_bucket.aws_s3_bucket_policy.this: Refreshing state... [id=novacorp-customer-data]
+      module.logs_bucket.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=novacorp-logs]
+      module.customer_data_bucket.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=novacorp-customer-data]
+      
+      No changes. Your infrastructure matches the configuration.
+      
+      Terraform has compared your real infrastructure against your configuration
+      and found no differences, so no changes are needed.
+  => OK
+
+[7/8] Export du plan en JSON (terraform show -json)
+      plan JSON : build/ci/plan.json - 20 resource_changes
+  => OK
+
+[8/8] Policy as code (Conftest)
+      
+      11 tests, 11 passed, 0 warnings, 0 failures, 0 exceptions
+  => OK
+
+RÉSULTAT : SUCCÈS — 8/8 étapes OK (87 s)
+$ echo $?
+0
