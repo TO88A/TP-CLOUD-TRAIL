@@ -18,3 +18,7 @@ plan*.json
 .trivycache/
 *.log
 crash.log
+
+# Plans et artefacts générés (hors du dossier analysé par Trivy)
+build/
+.scratch/

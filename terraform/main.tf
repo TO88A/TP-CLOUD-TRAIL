@@ -35,7 +35,7 @@ resource "aws_iam_user_policy" "app_writer" {
 
 # Configuration de l'application déposée dans le bucket de données
 resource "aws_s3_object" "app_config" {
-  bucket       = aws_s3_bucket.customer_data.id
+  bucket       = aws_s3_bucket.customer_data.bucket
   key          = "config/app.json"
   content_type = "application/json"
   content = jsonencode({
@@ -43,4 +43,23 @@ resource "aws_s3_object" "app_config" {
     db_user     = "app"
     db_password = var.db_password
   })
+}
+
+# --- Blocage de l'accès public (les 4 verrous) sur les deux buckets ---------
+# On référence ".bucket" (connu dès le plan) plutôt que ".id" (inconnu avant
+# apply) : les règles Conftest peuvent ainsi relier chaque verrou à son bucket.
+resource "aws_s3_bucket_public_access_block" "logs" {
+  bucket                  = aws_s3_bucket.logs.bucket
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_public_access_block" "customer_data" {
+  bucket                  = aws_s3_bucket.customer_data.bucket
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
