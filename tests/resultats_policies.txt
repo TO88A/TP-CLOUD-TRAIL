@@ -1,0 +1,12 @@
+== 1. Tests unitaires Rego (conftest verify)
+
+20 tests, 20 passed, 0 warnings, 0 failures, 0 exceptions, 0 skipped
+
+== 2. Matrice règle x plan
+PLAN                 ATTENDU                        OBTENU                         RÉSULTAT
+plan_bad             IAM-001:1 S3-001:2 TAG-001:4   IAM-001:1 S3-001:2 TAG-001:4   OK
+plan_good            -                              -                              OK
+rule1_iam_fail       IAM-001:1                      IAM-001:1                      OK
+rule1_iam_unknown    IAM-001:1                      IAM-001:1                      OK
+rule2_tags_fail      TAG-001:1                      TAG-001:1                      OK
+rule3_s3_fail        S3-001:2                       S3-001:2                       OK

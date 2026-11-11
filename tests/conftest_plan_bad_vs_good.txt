@@ -1,0 +1,21 @@
+$ conftest test tests/plans/plan_bad.json -p policies
+WARN - tests/plans/plan_bad.json - main - [TAG-002] aws_iam_user.app_writer : étiquette "env" absente.
+WARN - tests/plans/plan_bad.json - main - [TAG-002] aws_s3_bucket.customer_data : étiquette "env" absente.
+WARN - tests/plans/plan_bad.json - main - [TAG-002] aws_s3_bucket.logs : étiquette "env" absente.
+WARN - tests/plans/plan_bad.json - main - [TAG-002] aws_s3_object.app_config : étiquette "env" absente.
+FAIL - tests/plans/plan_bad.json - main - [IAM-001] aws_iam_user_policy.app_writer : la politique autorise Action "*" (Sid=-). Listez les actions précises (moindre privilège).
+FAIL - tests/plans/plan_bad.json - main - [S3-001] aws_s3_bucket.customer_data : le bucket "novacorp-customer-data" n'a pas de aws_s3_bucket_public_access_block (risque d'exposition publique).
+FAIL - tests/plans/plan_bad.json - main - [S3-001] aws_s3_bucket.logs : le bucket "novacorp-logs" n'a pas de aws_s3_bucket_public_access_block (risque d'exposition publique).
+FAIL - tests/plans/plan_bad.json - main - [TAG-001] aws_iam_user.app_writer (aws_iam_user) : étiquette obligatoire "owner" absente ou vide.
+FAIL - tests/plans/plan_bad.json - main - [TAG-001] aws_s3_bucket.customer_data (aws_s3_bucket) : étiquette obligatoire "owner" absente ou vide.
+FAIL - tests/plans/plan_bad.json - main - [TAG-001] aws_s3_bucket.logs (aws_s3_bucket) : étiquette obligatoire "owner" absente ou vide.
+FAIL - tests/plans/plan_bad.json - main - [TAG-001] aws_s3_object.app_config (aws_s3_object) : étiquette obligatoire "owner" absente ou vide.
+
+11 tests, 0 passed, 4 warnings, 7 failures, 0 exceptions
+(code de sortie: 1)
+
+$ conftest test tests/plans/plan_good.json -p policies
+
+11 tests, 11 passed, 0 warnings, 0 failures, 0 exceptions
+(code de sortie: 0)
+

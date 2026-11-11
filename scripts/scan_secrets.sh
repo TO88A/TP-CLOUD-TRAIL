@@ -35,9 +35,10 @@ if ! gitleaks dir "$SCAN_DIR" --config .gitleaks.toml --no-banner --redact=100 \
 fi
 
 echo "  [regex] recherche de motifs (AKIA..., password =, access_key =)"
+# Liste blanche identique à .gitleaks.toml : clé d'exemple AWS, valeurs factices
 PATTERN='(AKIA|ASIA)[A-Z0-9]{16}|(password|passwd|secret|token)[a-z_]*[[:space:]]*=[[:space:]]*"[^"$]{6,}"|(access_key|secret_key)[[:space:]]*=[[:space:]]*"[^"$]+"'
 if hits=$(grep -rnIiE --include='*.tf' --include='*.tfvars' --include='*.json' \
-            "$PATTERN" "$SCAN_DIR" 2>/dev/null); then
+            "$PATTERN" "$SCAN_DIR" 2>/dev/null           | grep -vE 'AKIAIOSFODNN7EXAMPLE|CHANGE_ME|REDACTED'); then
   # On masque la valeur dans la sortie
   echo "$hits" | sed -E 's/"[^"]*"/"***"/g; s#^build/secret-scan/##; s/^/    TROUVÉ : /'
   rc=1

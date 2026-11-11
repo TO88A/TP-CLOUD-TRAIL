@@ -7,7 +7,7 @@
 | Checkov 3.3.30 | **25 échecs** / 10 succès / 0 exception, 5 ressources | **0 échec** / 41 succès / **9 exceptions documentées**, 21 ressources |
 | Trivy 0.76.0 | **17 constats** (10 HIGH, 2 MEDIUM, 5 LOW) | **0 constat** (4 ignorés par exception) |
 | Secrets (gitleaks + regex) | **3** | **0** dans les fichiers versionnables |
-| Conftest (3 règles) | **12 refus** (voir `tests/README.md`) | **0 refus** |
+| Conftest (3 règles, plan JSON) | **7 refus** : IAM-001 ×1, TAG-001 ×4, S3-001 ×2 (`tests/README.md`) | **0 refus** |
 
 Les détails sont dans `checkov_apres.json`, `checkov_apres.txt`, `trivy_apres.json`, `trivy_apres.txt` et `secrets_apres.txt`. L'évolution commit par commit est dans [`progression.md`](progression.md).
 
