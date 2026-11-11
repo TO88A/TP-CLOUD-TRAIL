@@ -1,0 +1,6 @@
+# Scripts shell : toujours LF (sinon "bad interpreter" sous Linux/Docker)
+*.sh   text eol=lf
+*.tf   text eol=lf
+*.rego text eol=lf
+*.md   text eol=lf
+*.json text eol=lf

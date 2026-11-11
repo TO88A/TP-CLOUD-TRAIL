@@ -1,0 +1,23 @@
+$ terraform plan -out tfplan  (version naïve)
+
+Plan: 5 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + app_writer_user_arn       = (known after apply)
+  + app_writer_user_name      = "app-writer"
+  + customer_data_bucket_name = "novacorp-customer-data"
+  + logs_bucket_name          = "novacorp-logs"
+
+$ terraform apply tfplan
+aws_s3_bucket.logs: Creation complete after 1s [id=novacorp-logs]
+aws_s3_object.app_config: Creating...
+aws_s3_object.app_config: Creation complete after 0s [id=novacorp-customer-data/config/app.json]
+
+Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+app_writer_user_arn = "arn:aws:iam::000000000000:user/app-writer"
+app_writer_user_name = "app-writer"
+customer_data_bucket_name = "novacorp-customer-data"
+logs_bucket_name = "novacorp-logs"

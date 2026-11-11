@@ -1,0 +1,24 @@
+# Preuve d'existence des ressources (LocalStack, version naïve) — 2026-11-11T19:32:17Z
+$ aws --endpoint-url http://localhost:4566 s3 ls
+2026-11-11 19:32:17 novacorp-customer-data
+2026-11-11 19:32:17 novacorp-logs
+
+$ aws --endpoint-url http://localhost:4566 iam list-users
+{
+    "Users": [
+        {
+            "Path": "/",
+            "UserName": "app-writer",
+            "UserId": "c95mpnuom0wisdooczd5",
+            "Arn": "arn:aws:iam::000000000000:user/app-writer",
+            "CreateDate": "2026-11-11T19:32:17.242353+00:00"
+        }
+    ]
+}
+
+$ aws --endpoint-url http://localhost:4566 iam list-user-policies --user-name app-writer
+{
+    "PolicyNames": [
+        "app-writer-policy"
+    ]
+}

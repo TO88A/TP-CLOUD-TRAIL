@@ -1,0 +1,20 @@
+# --- Terraform (exigé par l'énoncé) ---
+.terraform/
+*.tfstate*
+*.tfvars
+tfplan
+plan*.json
+
+# Les plans de TEST (assainis, sans secret) sont, eux, versionnés
+!tests/plans/*.json
+
+# Secrets locaux fournis hors dépôt
+.env
+.env.*
+!.env.example
+
+# Caches des outils
+.tfcache/
+.trivycache/
+*.log
+crash.log
