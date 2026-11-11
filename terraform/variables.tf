@@ -43,3 +43,14 @@ variable "db_password" {
     error_message = "db_password doit contenir au moins 16 caractères."
   }
 }
+
+variable "owner" {
+  description = "Équipe propriétaire des ressources (étiquette obligatoire owner)."
+  type        = string
+  default     = "team-platform"
+
+  validation {
+    condition     = length(trimspace(var.owner)) > 0
+    error_message = "owner ne peut pas être vide."
+  }
+}

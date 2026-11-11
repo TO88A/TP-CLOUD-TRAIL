@@ -5,16 +5,28 @@
 #   - aucune étiquette
 # ---------------------------------------------------------------------------
 
+locals {
+  # Étiquettes obligatoires appliquées à CHAQUE ressource étiquetable.
+  common_tags = {
+    owner   = var.owner
+    env     = var.environment
+    project = var.project_name
+  }
+}
+
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.project_name}-logs"
+  tags   = merge(local.common_tags, { data_class = "logs" })
 }
 
 resource "aws_s3_bucket" "customer_data" {
   bucket = "${var.project_name}-customer-data"
+  tags   = merge(local.common_tags, { data_class = "confidential" })
 }
 
 resource "aws_iam_user" "app_writer" {
   name = "app-writer"
+  tags = local.common_tags
 }
 
 # Moindre privilège : la politique est portée par un GROUPE (CKV_AWS_40 /
@@ -61,6 +73,7 @@ resource "aws_s3_object" "app_config" {
     db_user     = "app"
     db_password = var.db_password
   })
+  tags = local.common_tags
 }
 
 # --- Blocage de l'accès public (les 4 verrous) sur les deux buckets ---------
