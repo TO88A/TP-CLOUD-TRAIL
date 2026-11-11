@@ -2,13 +2,8 @@
 # VERSION NAÏVE — volontairement non sécurisée (Partie 1 du TP).
 #   - aucun chiffrement, aucun blocage de l'accès public, pas de versioning
 #   - politique IAM avec Action = "*" et Resource = "*"
-#   - un mot de passe écrit en dur dans le code
 #   - aucune étiquette
 # ---------------------------------------------------------------------------
-
-locals {
-  app_db_password = "Nv-Pr0d!x9Qz#2026-Kt7w"
-}
 
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.project_name}-logs"
@@ -46,6 +41,6 @@ resource "aws_s3_object" "app_config" {
   content = jsonencode({
     db_host     = "db.novacorp.internal"
     db_user     = "app"
-    db_password = local.app_db_password
+    db_password = var.db_password
   })
 }

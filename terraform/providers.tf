@@ -1,9 +1,9 @@
 provider "aws" {
   region = var.aws_region
 
-  # VERSION NAÏVE : identifiants écrits en dur dans le code.
-  access_key = "test"
-  secret_key = "test"
+  # Aucun identifiant dans le code : ils sont lus dans l'environnement
+  # (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY = valeurs factices test/test,
+  # exportées par scripts/tools.sh).
 
   # LocalStack : pas de vrai compte AWS
   skip_credentials_validation = true
